@@ -6,6 +6,8 @@ from sqlalchemy.orm import Session
 from app.database import engine
 from app.database import Base, SessionLocal
 from app.models import Shipment
+from app.services.shipment_service import ShipmentService
+from app.schemas import ShipmentSchema
 
 
 def callback(ch, method, properties, body):
@@ -16,16 +18,8 @@ def callback(ch, method, properties, body):
 
         db: Session = SessionLocal()
 
-        nuevo_envio = Shipment(
-            product_id=data["product_id"],
-            name=data["name"],
-            quantity=data["quantity"],
-            destination=data["destination"]
-        )
-
-        db.add(nuevo_envio)
-        db.commit()
-        db.refresh(nuevo_envio)
+        shipment_data = ShipmentSchema(**data)
+        ShipmentService(db).create_shipment(shipment_data)
         db.close()
 
     except Exception as e:
