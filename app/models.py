@@ -9,6 +9,7 @@ class Shipment(Base):
     name = Column(String, nullable=False)
     quantity = Column(Integer, nullable=False)
     destination = Column(String, nullable=False)
+    status = Column(String)
 
 class ShipmentSummary(Base):
     __tablename__ = "shipment_summary"
